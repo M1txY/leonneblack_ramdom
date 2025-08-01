@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roue Aléatoire Pro</title>
+    <link rel="stylesheet" href="css/spin.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 Roue Aléatoire Pro</h1>
+        
+        <!-- Bouton pour mode plein écran -->
+        <div class="mode-toggle">
+            <button class="btn btn-primary" onclick="toggleFullscreenMode()">
+                🎯 Mode Roue Seule
+            </button>
+        </div>
+        
+        <div class="main-content" id="mainContent">
+            <div class="controls-section" id="controlsSection">
+                <h2 class="section-title">⚙️ Configuration</h2>
+                
+                <div class="import-export">
+                    <input type="file" id="importFile" accept=".json" style="display: none;">
+                    <button class="btn btn-primary" onclick="document.getElementById('importFile').click()">
+                        📥 Importer
+                    </button>
+                    <button class="btn btn-success" onclick="exportData()">
+                        📤 Exporter
+                    </button>
+                </div>
+                
+                <div class="add-item-form">
+                    <h3 style="margin-bottom: 20px; color: #495057;">➕ Ajouter un élément</h3>
+                    
+                    <div class="form-group">
+                        <label for="itemText">Texte :</label>
+                        <input type="text" id="itemText" class="form-control" placeholder="Entrez le texte de l'élément">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="itemImage">Image (optionnel) :</label>
+                        <input type="file" id="itemImage" class="form-control" accept="image/*">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="itemColor">Couleur :</label>
+                        <div class="color-picker-group">
+                            <input type="color" id="itemColor" class="color-picker" value="#FF6B6B">
+                            <span id="colorValue">#FF6B6B</span>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-success" onclick="addItem()">
+                        ✨ Ajouter à la roue
+                    </button>
+                </div>
+
+                <div class="items-list">
+                    <h3 class="section-title">📋 Éléments de la roue</h3>
+                    <div id="itemsList"></div>
+                </div>
+            </div>
+
+            <div class="wheel-section" id="wheelSection">
+                <div class="wheel-container" id="wheelContainer">
+                    <canvas id="wheel" width="400" height="400"></canvas>
+                    <div class="wheel-center">
+                        <button id="spinBtn" onclick="spinWheel()">SPIN</button>
+                    </div>
+                    <div class="wheel-pointer"></div>
+                    <div class="sparkles" id="sparkles"></div>
+                </div>
+                
+                <div class="wheel-controls">
+                    <button class="btn spin-main-btn" onclick="spinWheel()">
+                        🎲 LANCER LA ROUE
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bouton retour en mode plein écran -->
+        <div class="back-to-config" id="backToConfig" style="display: none;">
+            <button class="btn btn-secondary" onclick="toggleFullscreenMode()">
+                ⚙️ Retour Configuration
+            </button>
+        </div>
+
+        <div class="result-overlay" id="resultOverlay" onclick="closeResult()"></div>
+        <div id="result" class="result" onclick="closeResult()"></div>
+        
+        <!-- Particules d'arrière-plan -->
+        <div class="particles" id="particles"></div>
+    </div>
+
+    <script src="js/spin.js"></script>
+</body>
+</html>
