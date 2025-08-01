@@ -2,6 +2,7 @@ let wheelItems = [];
 let isSpinning = false;
 let currentRotation = 0;
 let isFullscreenMode = false;
+let autoRemoveEnabled = false; // Nouvelle variable
 
 const canvas = document.getElementById('wheel');
 const ctx = canvas.getContext('2d');
@@ -15,6 +16,11 @@ const defaultColors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#
 // Mise à jour de l'affichage de la couleur
 document.getElementById('itemColor').addEventListener('input', function(e) {
     document.getElementById('colorValue').textContent = e.target.value;
+});
+
+// Gestion de l'option de suppression automatique
+document.getElementById('autoRemove').addEventListener('change', function(e) {
+    autoRemoveEnabled = e.target.checked;
 });
 
 // Mode plein écran amélioré
@@ -107,27 +113,6 @@ function createParticles() {
         particle.style.animationDelay = Math.random() * 10 + 's';
         particle.style.animationDuration = (Math.random() * 5 + 5) + 's';
         particlesContainer.appendChild(particle);
-    }
-}
-
-// Créer des étincelles autour de la roue
-function createSparkles() {
-    const sparklesContainer = document.getElementById('sparkles');
-    sparklesContainer.innerHTML = '';
-    
-    for (let i = 0; i < 12; i++) {
-        const sparkle = document.createElement('div');
-        sparkle.className = 'sparkle';
-        const angle = (i / 12) * 360;
-        const distance = radius + 30;
-        const x = Math.cos(angle * Math.PI / 180) * distance;
-        const y = Math.sin(angle * Math.PI / 180) * distance;
-        
-        sparkle.style.left = `calc(50% + ${x}px)`;
-        sparkle.style.top = `calc(50% + ${y}px)`;
-        sparkle.style.animationDelay = (i * 0.1) + 's';
-        
-        sparklesContainer.appendChild(sparkle);
     }
 }
 
@@ -300,7 +285,7 @@ function addItem() {
 function resetForm() {
     document.getElementById('itemText').value = '';
     document.getElementById('itemImage').value = '';
-    const nextColor = defaultColors[wheelItems.length % defaultColors.length];
+    const nextColor = defaultColors[wheelItems.length % wheelItems.length];
     document.getElementById('itemColor').value = nextColor;
     document.getElementById('colorValue').textContent = nextColor;
 }
@@ -359,9 +344,6 @@ function spinWheel() {
     spinButton.textContent = '...';
     wheelContainer.classList.add('spinning');
     
-    // Créer des étincelles
-    createSparkles();
-    
     // Animation plus spectaculaire
     const minSpins = 4;
     const maxSpins = 8;
@@ -384,21 +366,21 @@ function spinWheel() {
         if (progress < 1) {
             requestAnimationFrame(animate);
         } else {
-            // Calculer le résultat
-            const normalizedRotation = (2 * Math.PI - (currentRotation % (2 * Math.PI))) % (2 * Math.PI);
+            // Calculer le résultat CORRIGÉ - La flèche pointe vers la droite (0 radians)
+            // Il faut inverser la rotation et ajuster pour que la flèche pointe correctement
+            let normalizedRotation = (-currentRotation) % (2 * Math.PI);
+            if (normalizedRotation < 0) normalizedRotation += 2 * Math.PI;
+            
             const anglePerItem = (2 * Math.PI) / wheelItems.length;
-            const winnerIndex = Math.floor(normalizedRotation / anglePerItem);
+            // Ajouter un décalage de la moitié d'un segment pour centrer sur la flèche
+            const adjustedRotation = (normalizedRotation + anglePerItem / 2) % (2 * Math.PI);
+            const winnerIndex = Math.floor(adjustedRotation / anglePerItem) % wheelItems.length;
             
             setTimeout(() => {
-                showResult(wheelItems[winnerIndex]);
+                showResult(wheelItems[winnerIndex], winnerIndex);
                 isSpinning = false;
                 spinButton.textContent = 'SPIN';
                 wheelContainer.classList.remove('spinning');
-                
-                // Supprimer les étincelles
-                setTimeout(() => {
-                    document.getElementById('sparkles').innerHTML = '';
-                }, 1000);
             }, 800);
         }
     }
@@ -406,7 +388,7 @@ function spinWheel() {
     animate();
 }
 
-function showResult(winner) {
+function showResult(winner, winnerIndex) {
     const resultDiv = document.getElementById('result');
     const overlay = document.getElementById('resultOverlay');
     
@@ -414,21 +396,43 @@ function showResult(winner) {
         <h2>🎉 Résultat :</h2>
         ${winner.image ? `<img src="${winner.image}" alt="${winner.text}">` : ''}
         <div class="result-text" style="color: ${winner.color}">${winner.text}</div>
+        ${autoRemoveEnabled ? '<p style="font-size: 14px; margin-top: 15px; color: #dc3545; font-weight: bold;">🗑️ Élément supprimé de la roue</p>' : ''}
         <p style="font-size: 14px; margin-top: 20px; color: #6c757d;">Cliquez n'importe où pour fermer</p>
     `;
     
     overlay.className = 'result-overlay show';
     resultDiv.className = 'result show';
+    
+    // Supprimer l'élément si l'option est activée
+    if (autoRemoveEnabled && winnerIndex !== undefined && winnerIndex >= 0) {
+        setTimeout(() => {
+            wheelItems.splice(winnerIndex, 1);
+            updateItemsList();
+            drawWheel();
+            
+            // Vérifier s'il reste des éléments
+            if (wheelItems.length === 0) {
+                setTimeout(() => {
+                    alert('🎯 Tous les éléments ont été utilisés ! Ajoutez de nouveaux éléments pour continuer.');
+                }, 1000);
+            }
+        }, 2000); // Attendre 2 secondes avant de supprimer
+    }
 }
 
+// Fonction manquante pour fermer le résultat
 function closeResult() {
-    document.getElementById('result').className = 'result';
-    document.getElementById('resultOverlay').className = 'result-overlay';
+    const resultDiv = document.getElementById('result');
+    const overlay = document.getElementById('resultOverlay');
+    
+    overlay.className = 'result-overlay';
+    resultDiv.className = 'result';
 }
 
 function exportData() {
     const data = {
         items: wheelItems,
+        autoRemoveEnabled: autoRemoveEnabled, // Sauvegarder la préférence
         timestamp: new Date().toISOString(),
         version: "2.0"
     };
@@ -456,6 +460,13 @@ document.getElementById('importFile').addEventListener('change', function(e) {
                     image: item.image,
                     color: item.color || defaultColors[Math.floor(Math.random() * defaultColors.length)]
                 }));
+                
+                // Restaurer la préférence de suppression automatique
+                if (typeof data.autoRemoveEnabled === 'boolean') {
+                    autoRemoveEnabled = data.autoRemoveEnabled;
+                    document.getElementById('autoRemove').checked = autoRemoveEnabled;
+                }
+                
                 updateItemsList();
                 drawWheel();
                 alert('✅ Données importées avec succès !');
