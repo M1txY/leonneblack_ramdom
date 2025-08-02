@@ -491,3 +491,86 @@ document.addEventListener('DOMContentLoaded', function() {
         closeGameOver();
     });
 });
+
+// Afficher un indice
+function showHint() {
+    if (currentGame.answered || currentGame.hintUsed) return;
+    
+    currentGame.hintUsed = true;
+    const rebusData = gameRebus[currentGame.currentRebusIndex];
+    const hintDisplay = document.getElementById('rebusHint');
+    
+    // Générer un indice basé sur la première lettre et la longueur
+    const answer = rebusData.name;
+    const firstLetter = answer.charAt(0).toUpperCase();
+    const wordLength = answer.length;
+    const hint = `💡 Commence par "${firstLetter}" et fait ${wordLength} caractères`;
+    
+    hintDisplay.innerHTML = `
+        <div style="background: #fff3cd; padding: 10px; border-radius: 8px; margin-top: 15px; border-left: 4px solid #ffc107;">
+            <strong>${hint}</strong>
+        </div>
+    `;
+    
+    // Cacher le bouton indice après utilisation
+    document.getElementById('hintBtn').style.display = 'none';
+}
+
+// Arrêter le jeu
+function stopGame() {
+    if (!currentGame.isPlaying) return;
+    
+    if (confirm('🛑 Êtes-vous sûr de vouloir arrêter le jeu ?')) {
+        currentGame.isPlaying = false;
+        clearInterval(currentGame.timer);
+        
+        // Réinitialiser l'interface
+        document.getElementById('startBtn').style.display = 'inline-block';
+        document.getElementById('stopBtn').style.display = 'none';
+        document.getElementById('revealBtn').style.display = 'none';
+        document.getElementById('hintBtn').style.display = 'none';
+        document.getElementById('nextBtn').style.display = 'none';
+        
+        // Réinitialiser l'affichage
+        document.getElementById('rebusEmojisDisplay').textContent = '🧩 Cliquez sur "Commencer" pour jouer !';
+        document.getElementById('rebusHint').textContent = '';
+        
+        // Réinitialiser les stats
+        currentGame.score = 0;
+        currentGame.currentRebusIndex = 0;
+        updateGameStats();
+    }
+}
+
+// Fonction manquante showRebusResult (pour gérer le timer qui expire)
+function showRebusResult(isCorrect) {
+    const rebusData = gameRebus[currentGame.currentRebusIndex];
+    const hintDisplay = document.getElementById('rebusHint');
+    
+    if (isCorrect) {
+        hintDisplay.innerHTML = `
+            <div style="background: #d4edda; padding: 15px; border-radius: 10px; margin-top: 20px; border-left: 4px solid #28a745;">
+                <div style="font-size: 24px; font-weight: bold; color: #28a745; margin-bottom: 10px;">
+                    🎉 Bravo ! Temps écoulé mais vous aviez la bonne idée !
+                </div>
+                <div style="font-size: 20px; margin-bottom: 10px;">✅ ${rebusData.name}</div>
+                ${rebusData.image ? `<img src="${rebusData.image}" alt="${rebusData.name}" style="max-width: 200px; max-height: 150px; border-radius: 8px; object-fit: cover;">` : ''}
+            </div>
+        `;
+    } else {
+        hintDisplay.innerHTML = `
+            <div style="background: #f8d7da; padding: 15px; border-radius: 10px; margin-top: 20px; border-left: 4px solid #dc3545;">
+                <div style="font-size: 24px; font-weight: bold; color: #dc3545; margin-bottom: 10px;">
+                    ⏰ Temps écoulé !
+                </div>
+                <div style="font-size: 20px; margin-bottom: 10px;">La réponse était : <strong>${rebusData.name}</strong></div>
+                ${rebusData.image ? `<img src="${rebusData.image}" alt="${rebusData.name}" style="max-width: 200px; max-height: 150px; border-radius: 8px; object-fit: cover;">` : ''}
+            </div>
+        `;
+    }
+    
+    // Cacher les boutons de jeu et montrer "Suivant"
+    document.getElementById('revealBtn').style.display = 'none';
+    document.getElementById('hintBtn').style.display = 'none';
+    document.getElementById('nextBtn').style.display = 'inline-block';
+}
