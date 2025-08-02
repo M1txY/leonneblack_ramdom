@@ -233,19 +233,12 @@ function startGame() {
     // Mettre à jour l'interface
     document.getElementById('startBtn').style.display = 'none';
     document.getElementById('stopBtn').style.display = 'inline-block';
-    document.getElementById('skipBtn').style.display = 'inline-block';
+    document.getElementById('revealBtn').style.display = 'inline-block';
     document.getElementById('hintBtn').style.display = 'inline-block';
-    document.getElementById('answerSection').style.display = 'flex';
+    document.getElementById('nextBtn').style.display = 'none';
     
     updateGameStats();
     loadCurrentRebus();
-}
-
-// Arrêter le jeu
-function stopGame() {
-    if (confirm('🛑 Êtes-vous sûr de vouloir arrêter le jeu ?')) {
-        endGame();
-    }
 }
 
 // Charger le rébus actuel
@@ -257,18 +250,12 @@ function loadCurrentRebus() {
     
     const rebusData = gameRebus[currentGame.currentRebusIndex];
     
-    // Afficher le rébus
-    const imageDisplay = document.getElementById('rebusImageDisplay');
+    // Afficher les emojis
     const emojisDisplay = document.getElementById('rebusEmojisDisplay');
     const hintDisplay = document.getElementById('rebusHint');
     
-    if (rebusData.image) {
-        imageDisplay.innerHTML = `<img src="${rebusData.image}" alt="Indice">`;
-    } else {
-        imageDisplay.innerHTML = '';
-    }
-    
     emojisDisplay.textContent = rebusData.emojis;
+    emojisDisplay.style.display = 'block';
     hintDisplay.textContent = '';
     
     // Réinitialiser pour le nouveau rébus
@@ -276,8 +263,10 @@ function loadCurrentRebus() {
     currentGame.answered = false;
     currentGame.hintUsed = false;
     
-    document.getElementById('answerInput').value = '';
-    document.getElementById('answerInput').focus();
+    // Réafficher les boutons
+    document.getElementById('revealBtn').style.display = 'inline-block';
+    document.getElementById('hintBtn').style.display = 'inline-block';
+    document.getElementById('nextBtn').style.display = 'none';
     
     // Démarrer le timer
     startTimer();
@@ -307,95 +296,38 @@ function timeUp() {
     showRebusResult(false);
 }
 
-// Vérifier la réponse
-function checkAnswer() {
+// Révéler la réponse
+function revealAnswer() {
     if (currentGame.answered) return;
-    
-    const userAnswer = document.getElementById('answerInput').value.trim().toLowerCase();
-    const correctAnswer = gameRebus[currentGame.currentRebusIndex].name.toLowerCase();
-    
-    // Vérification flexible (enlever les accents, espaces, etc.)
-    const normalizeText = (text) => {
-        return text.normalize('NFD')
-                  .replace(/[\u0300-\u036f]/g, '')
-                  .replace(/[^\w\s]/gi, '')
-                  .replace(/\s+/g, '')
-                  .toLowerCase();
-    };
-    
-    const isCorrect = normalizeText(userAnswer) === normalizeText(correctAnswer) ||
-                     userAnswer === correctAnswer ||
-                     correctAnswer.includes(userAnswer) && userAnswer.length > 2;
     
     currentGame.answered = true;
     clearInterval(currentGame.timer);
     
-    if (isCorrect) {
-        // Calculer les points
-        let points = Math.max(100, Math.floor((currentGame.timeLeft / 45) * 500));
-        if (currentGame.hintUsed) points -= 50;
-        
-        currentGame.score += Math.max(50, points);
-        showRebusResult(true, points);
-    } else {
-        showRebusResult(false);
-    }
-}
-
-// Afficher un indice
-function showHint() {
-    if (currentGame.hintUsed) return;
-    
-    currentGame.hintUsed = true;
     const rebusData = gameRebus[currentGame.currentRebusIndex];
     const hintDisplay = document.getElementById('rebusHint');
     
-    // Créer un indice (première et dernière lettre + longueur)
-    const answer = rebusData.name;
-    const hint = answer.length > 1 ? 
-        `💡 ${answer[0].toUpperCase()}${'_'.repeat(answer.length - 2)}${answer[answer.length - 1].toLowerCase()} (${answer.length} lettres)` :
-        `💡 ${answer.length} lettre`;
-    
-    hintDisplay.textContent = hint;
-    document.getElementById('hintBtn').style.display = 'none';
-}
-
-// Passer le rébus
-function skipRebus() {
-    if (confirm('⏭️ Passer au rébus suivant ?')) {
-        currentGame.answered = true;
-        clearInterval(currentGame.timer);
-        showRebusResult(false);
-    }
-}
-
-// Afficher le résultat du rébus
-function showRebusResult(isCorrect, points = 0) {
-    const rebusData = gameRebus[currentGame.currentRebusIndex];
-    const resultContent = document.getElementById('resultContent');
-    
-    resultContent.innerHTML = `
-        <h2>${isCorrect ? '🎉 Bravo !' : '😞 Dommage !'}</h2>
-        ${rebusData.image ? `<img src="${rebusData.image}" alt="${rebusData.name}" class="result-image">` : ''}
-        <div class="result-emojis">${rebusData.emojis}</div>
-        <div class="result-answer">${rebusData.name}</div>
-        ${isCorrect ? `<p style="color: #28a745; font-weight: bold; font-size: 1.3rem;">+${points} points !</p>` : 
-                     `<p style="color: #dc3545; font-weight: bold;">La réponse était : <strong>${rebusData.name}</strong></p>`}
-        <button class="btn btn-primary" onclick="nextRebus()" style="margin-top: 20px;">
-            ${currentGame.currentRebusIndex < gameRebus.length - 1 ? '➡️ Rébus Suivant' : '🏁 Voir Résultats'}
-        </button>
+    // Afficher la réponse avec l'image si disponible
+    hintDisplay.innerHTML = `
+        <div style="background: #f8f9fa; padding: 15px; border-radius: 10px; margin-top: 20px;">
+            <div style="font-size: 24px; font-weight: bold; color: #28a745; margin-bottom: 10px;">
+                ✅ ${rebusData.name}
+            </div>
+            ${rebusData.image ? `<img src="${rebusData.image}" alt="${rebusData.name}" style="max-width: 200px; max-height: 150px; border-radius: 8px; object-fit: cover;">` : ''}
+        </div>
     `;
     
-    document.getElementById('resultOverlay').classList.add('show');
+    // Cacher les boutons de jeu et montrer "Suivant"
+    document.getElementById('revealBtn').style.display = 'none';
+    document.getElementById('hintBtn').style.display = 'none';
+    document.getElementById('nextBtn').style.display = 'inline-block';
 }
 
 // Rébus suivant
 function nextRebus() {
-    document.getElementById('resultOverlay').classList.remove('show');
     currentGame.currentRebusIndex++;
     
     if (currentGame.currentRebusIndex < gameRebus.length) {
-        setTimeout(() => loadCurrentRebus(), 500);
+        loadCurrentRebus();
     } else {
         endGame();
     }
@@ -409,32 +341,19 @@ function endGame() {
     // Réinitialiser l'interface
     document.getElementById('startBtn').style.display = 'inline-block';
     document.getElementById('stopBtn').style.display = 'none';
-    document.getElementById('skipBtn').style.display = 'none';
+    document.getElementById('revealBtn').style.display = 'none';
     document.getElementById('hintBtn').style.display = 'none';
-    document.getElementById('answerSection').style.display = 'none';
-    
-    // Calculer les statistiques
-    const totalPossibleScore = gameRebus.length * 500;
-    const percentage = totalPossibleScore > 0 ? Math.round((currentGame.score / totalPossibleScore) * 100) : 0;
-    
-    let rank = 'Débutant 🐣';
-    if (percentage >= 90) rank = 'Maître des Rébus 👑';
-    else if (percentage >= 75) rank = 'Expert 🎯';
-    else if (percentage >= 60) rank = 'Avancé 🌟';
-    else if (percentage >= 40) rank = 'Intermédiaire 🧩';
+    document.getElementById('nextBtn').style.display = 'none';
     
     const gameOverContent = document.getElementById('gameOverContent');
     gameOverContent.innerHTML = `
         <h2>🏁 Jeu Terminé !</h2>
-        <div class="final-score">${currentGame.score}</div>
-        <p style="color: #6c757d; margin-bottom: 20px;">
-            ${currentGame.currentRebusIndex} rébus joué${currentGame.currentRebusIndex > 1 ? 's' : ''}
+        <p style="font-size: 18px; color: #6c757d; margin-bottom: 20px;">
+            ${currentGame.currentRebusIndex} rébus présenté${currentGame.currentRebusIndex > 1 ? 's' : ''}
         </p>
         <div style="background: #f8f9fa; padding: 20px; border-radius: 12px; margin: 20px 0;">
-            <h3 style="color: #2c3e50; margin-bottom: 15px;">📊 Statistiques</h3>
-            <p><strong>Score:</strong> ${currentGame.score} / ${totalPossibleScore}</p>
-            <p><strong>Pourcentage:</strong> ${percentage}%</p>
-            <p><strong>Rang:</strong> ${rank}</p>
+            <h3 style="color: #2c3e50; margin-bottom: 15px;">🎯 Bonne partie !</h3>
+            <p>Vous avez vu tous les rébus de la collection.</p>
         </div>
         <div style="display: flex; gap: 15px; justify-content: center; margin-top: 25px; flex-wrap: wrap;">
             <button class="btn btn-success" onclick="startGame(); closeGameOver();">
@@ -512,14 +431,8 @@ document.getElementById('importConfig').addEventListener('change', function(e) {
     reader.readAsText(file);
 });
 
-// Raccourcis clavier
+// Raccourcis clavier simplifiés
 document.addEventListener('keydown', function(e) {
-    // Entrée pour valider la réponse
-    if (e.key === 'Enter' && currentGame.isPlaying && !currentGame.answered) {
-        e.preventDefault();
-        checkAnswer();
-    }
-    
     // Échap pour fermer les overlays
     if (e.key === 'Escape') {
         closeEmojiPicker();
@@ -535,16 +448,22 @@ document.addEventListener('keydown', function(e) {
     
     if (!currentGame.isPlaying) return;
     
+    // R pour révéler la réponse
+    if (e.key.toLowerCase() === 'r' && !currentGame.answered) {
+        e.preventDefault();
+        revealAnswer();
+    }
+    
     // H pour indice
     if (e.key.toLowerCase() === 'h' && !currentGame.answered && !currentGame.hintUsed) {
         e.preventDefault();
         showHint();
     }
     
-    // Espace pour passer
-    if (e.key === ' ' && document.activeElement.id !== 'answerInput') {
+    // Espace ou Entrée pour suivant
+    if ((e.key === ' ' || e.key === 'Enter') && currentGame.answered) {
         e.preventDefault();
-        skipRebus();
+        nextRebus();
     }
 });
 
@@ -559,6 +478,16 @@ function shuffleArray(array) {
 
 // Initialisation
 document.addEventListener('DOMContentLoaded', function() {
-    updateRebusList();
-    closeGameOver();
+    // Permettre l'édition directe du textarea emoji
+    document.getElementById('rebusEmojis').addEventListener('input', function(e) {
+        // Permettre la saisie directe d'emojis
+    });
+
+    // Supprimer readonly du textarea
+    document.addEventListener('DOMContentLoaded', function() {
+        const emojiInput = document.getElementById('rebusEmojis');
+        emojiInput.removeAttribute('readonly');
+        updateRebusList();
+        closeGameOver();
+    });
 });

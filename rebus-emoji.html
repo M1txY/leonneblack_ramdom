@@ -50,7 +50,7 @@
                     <div class="form-group">
                         <label for="rebusEmojis">Suite d'Emojis :</label>
                         <div class="emoji-input-wrapper">
-                            <textarea id="rebusEmojis" class="form-control emoji-input" placeholder="Cliquez pour sélectionner des emojis..." readonly></textarea>
+                            <textarea id="rebusEmojis" class="form-control emoji-input" placeholder="Tapez ou collez vos emojis ici, ou cliquez sur 'Ajouter' pour sélectionner..."></textarea>
                             <div class="emoji-actions">
                                 <button type="button" class="btn btn-primary btn-sm" onclick="openEmojiPicker()">
                                     😀 Ajouter
@@ -107,34 +107,31 @@
 
                 <div class="rebus-container" id="rebusContainer">
                     <div class="rebus-display">
-                        <div class="rebus-image" id="rebusImageDisplay"></div>
                         <div class="rebus-emojis" id="rebusEmojisDisplay">
                             🧩 Cliquez sur "Commencer" pour jouer !
                         </div>
                         <div class="rebus-hint" id="rebusHint"></div>
                     </div>
                     
-                    <div class="answer-section" id="answerSection" style="display: none;">
-                        <input type="text" id="answerInput" class="answer-input" placeholder="Votre réponse...">
-                        <button class="btn btn-primary" onclick="checkAnswer()">
-                            ✅ Valider
-                        </button>
-                    </div>
+                    <!-- Plus besoin de section de réponse -->
                 </div>
                 
                 <div class="game-controls" id="gameControls">
                     <div class="control-buttons">
-                        <button class="btn btn-success start-btn" onclick="startGame()" id="startBtn">
+                        <button class="btn btn-success start-btn" id="startBtn" onclick="startGame()">
                             🎮 Commencer le Jeu
                         </button>
-                        <button class="btn btn-warning" onclick="showHint()" id="hintBtn" style="display: none;">
-                            💡 Indice (-50 pts)
+                        <button class="btn btn-danger" id="stopBtn" onclick="stopGame()" style="display: none;">
+                            🛑 Arrêter
                         </button>
-                        <button class="btn btn-secondary" onclick="skipRebus()" id="skipBtn" style="display: none;">
-                            ⏭️ Passer
+                        <button class="btn btn-primary" id="revealBtn" onclick="revealAnswer()" style="display: none;">
+                            👁️ Révéler Réponse
                         </button>
-                        <button class="btn btn-danger" onclick="stopGame()" id="stopBtn" style="display: none;">
-                            ⏹️ Arrêter
+                        <button class="btn btn-warning" id="hintBtn" onclick="showHint()" style="display: none;">
+                            💡 Indice
+                        </button>
+                        <button class="btn btn-secondary" id="nextBtn" onclick="nextRebus()" style="display: none;">
+                            ➡️ Suivant
                         </button>
                     </div>
                 </div>

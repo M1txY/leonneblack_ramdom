@@ -170,15 +170,22 @@ h1 {
     text-align: center;
     min-height: 80px;
     line-height: 1.4;
-    cursor: pointer;
-    background: #f8f9fa;
-    border: 2px dashed #007bff;
+    cursor: text;
+    background: #ffffff;
+    border: 2px solid #007bff;
     transition: all 0.3s ease;
+    /* Supprimer readonly styles */
 }
 
 .emoji-input:hover {
-    background: #e3f2fd;
+    background: #f8f9fa;
     border-color: #0056b3;
+}
+
+.emoji-input:focus {
+    background: #ffffff;
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
 }
 
 .emoji-actions {
@@ -716,29 +723,12 @@ emoji-picker {
     max-width: 600px;
 }
 
-.container.fullscreen-mode .rebus-display {
-    background: rgba(255, 255, 255, 0.9);
-    padding: 60px;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.3);
-}
-
+/* Supprimer l'affichage de l'image pendant le jeu SEULEMENT */
 .rebus-image {
-    margin-bottom: 20px;
+    display: none;
 }
 
-.rebus-image img {
-    max-width: 150px;
-    max-height: 150px;
-    border-radius: 12px;
-    border: 4px solid #007bff;
-    object-fit: cover;
-}
-
-.container.fullscreen-mode .rebus-image img {
-    max-width: 200px;
-    max-height: 200px;
-}
-
+/* S'assurer que les emojis s'affichent bien */
 .rebus-emojis {
     font-size: 48px;
     line-height: 1.2;
@@ -747,12 +737,14 @@ emoji-picker {
     text-align: center;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
     animation: bounce 2s infinite;
+    display: block !important; /* Forcer l'affichage */
 }
 
 .container.fullscreen-mode .rebus-emojis {
     font-size: 64px;
     margin: 40px 0;
     letter-spacing: 15px;
+    display: block !important; /* Forcer l'affichage */
 }
 
 .rebus-hint {
