@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🖼️ Devine l'Image - Jeu Oral</title>
+    <link rel="stylesheet" href="css/guess-image.css">
+</head>
+<body>
+    <div class="container">
+        <div class="subtitle"></div>
+        
+        <!-- Bouton pour mode plein écran -->
+        <div class="mode-toggle">
+            <button class="btn btn-primary" onclick="toggleFullscreenMode()">
+                🎯 Mode Jeu Seul
+            </button>
+        </div>
+        
+        <div class="main-content" id="mainContent">
+            <!-- Section Configuration -->
+            <div class="config-section" id="configSection">
+                <h2 class="section-title">⚙️ Configuration du Jeu</h2>
+                
+                <div class="import-export">
+                    <input type="file" id="importConfig" accept=".json" style="display: none;">
+                    <button class="btn btn-primary" onclick="document.getElementById('importConfig').click()">
+                        📥 Importer Config
+                    </button>
+                    <button class="btn btn-success" onclick="exportConfig()">
+                        📤 Exporter Config
+                    </button>
+                </div>
+                
+                <div class="config-form">
+                    <h3>➕ Ajouter une Image</h3>
+                    
+                    <div class="form-group">
+                        <label for="imageFile">Image :</label>
+                        <input type="file" id="imageFile" class="form-control" accept="image/*" required>
+                        <div class="image-preview" id="imagePreview"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="imageName">Nom/Réponse :</label>
+                        <input type="text" id="imageName" class="form-control" placeholder="Nom de l'image ou réponse" required>
+                    </div>
+                    
+                    <button class="btn btn-success" onclick="addImage()">
+                        ✨ Ajouter à la Collection
+                    </button>
+                </div>
+
+                <div class="images-list">
+                    <h3 class="section-title">📋 Collection d'Images (<span id="imageCount">0</span>)</h3>
+                    <div id="imagesList"></div>
+                </div>
+            </div>
+
+            <!-- Section Jeu -->
+            <div class="game-section" id="gameSection">
+                <div class="game-header">
+                    <div class="game-stats">
+                        <div class="stat">
+                            <span class="stat-label">Score:</span>
+                            <span class="stat-value" id="score">0</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Temps:</span>
+                            <span class="stat-value" id="timer">30</span>s
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Image:</span>
+                            <span class="stat-value"><span id="currentImageNum">0</span>/<span id="totalImages">0</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="image-container" id="imageContainer">
+                    <canvas id="gameCanvas" width="400" height="400"></canvas>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                        <span class="progress-text">Dépixélisation en cours...</span>
+                    </div>
+                </div>
+                
+                <div class="game-controls" id="gameControls">
+                    <div class="control-buttons">
+                        <button class="btn btn-success start-btn" onclick="startGame()" id="startBtn">
+                            🎮 Commencer le Jeu Oral
+                        </button>
+                        <button class="btn btn-secondary" onclick="skipImage()" id="skipBtn" style="display: none;">
+                            ⏭️ Image Suivante
+                        </button>
+                        <button class="btn btn-danger" onclick="stopGame()" id="stopBtn" style="display: none;">
+                            ⏹️ Arrêter
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bouton retour en mode plein écran -->
+        <div class="back-to-config" id="backToConfig" style="display: none;">
+            <button class="btn btn-secondary" onclick="toggleFullscreenMode()">
+                ⚙️ Retour Configuration
+            </button>
+        </div>
+
+        <!-- Overlay de résultat -->
+        <div class="result-overlay" id="resultOverlay">
+            <div class="result-content" id="resultContent">
+                <!-- Contenu généré dynamiquement -->
+            </div>
+        </div>
+
+        <!-- Overlay de fin de jeu -->
+        <div class="game-over-overlay" id="gameOverOverlay">
+            <div class="game-over-content" id="gameOverContent">
+                <!-- Contenu généré dynamiquement -->
+            </div>
+        </div>
+    </div>
+
+    <script src="js/guess-image.js"></script>
+</body>
+</html>
