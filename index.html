@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎮 Collection de Jeux - Léonne Black</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .game-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #FF6B6B, #4ECDC4, #45B7D1, #96CEB4);
+        }
+
+        .game-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+        }
+
+        .game-icon {
+            font-size: 4rem;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .game-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+            color: #333;
+        }
+
+        .game-description {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .game-features {
+            list-style: none;
+            margin-bottom: 25px;
+        }
+
+        .game-features li {
+            padding: 5px 0;
+            color: #555;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .game-features li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #4ECDC4;
+            font-weight: bold;
+        }
+
+        .play-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .play-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .footer {
+            text-align: center;
+            color: white;
+            opacity: 0.8;
+            margin-top: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .games-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .game-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎮 Collection de Jeux</h1>
+            <p>Découvrez tous mes jeux interactifs</p>
+        </div>
+
+        <div class="games-grid">
+            <!-- Roue Aléatoire -->
+            <a href="spin.html" class="game-card">
+                <div class="game-icon">🎯</div>
+                <div class="game-title">Roue Aléatoire Pro</div>
+                <div class="game-description">
+                    Une roue de la fortune personnalisable avec des effets visuels époustouflants
+                </div>
+                <ul class="game-features">
+                    <li>Ajout d'éléments avec texte et images</li>
+                    <li>Couleurs personnalisables</li>
+                    <li>Mode plein écran</li>
+                    <li>Import/Export de configuration</li>
+                    <li>Suppression automatique après sélection</li>
+                </ul>
+                <button class="play-button">🎲 Jouer Maintenant</button>
+            </a>
+
+            <!-- Devine l'Image -->
+            <a href="guess-image.html" class="game-card">
+                <div class="game-icon">🖼️</div>
+                <div class="game-title">Devine l'Image</div>
+                <div class="game-description">
+                    Jeu de devinettes où les images se révèlent progressivement par dépixélisation
+                </div>
+                <ul class="game-features">
+                    <li>Jeu oral interactif</li>
+                    <li>Système de score et timer</li>
+                    <li>Dépixélisation progressive</li>
+                    <li>Collection d'images personnalisable</li>
+                    <li>Mode plein écran pour projection</li>
+                </ul>
+                <button class="play-button">🎮 Jouer Maintenant</button>
+            </a>
+
+            <!-- Vous pouvez ajouter d'autres jeux ici -->
+            <div class="game-card" style="opacity: 0.6; pointer-events: none;">
+                <div class="game-icon">🚧</div>
+                <div class="game-title">Nouveau Jeu</div>
+                <div class="game-description">
+                    Un nouveau jeu arrive bientôt ! Restez à l'écoute pour découvrir la prochaine aventure.
+                </div>
+                <ul class="game-features">
+                    <li>En cours de développement</li>
+                    <li>Fonctionnalités surprises</li>
+                    <li>Bientôt disponible</li>
+                </ul>
+                <button class="play-button" disabled>🔜 Bientôt Disponible</button>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>© 2025 Léonne Black - Collection de Jeux Interactifs</p>
+        </div>
+    </div>
+</body>
+</html>
