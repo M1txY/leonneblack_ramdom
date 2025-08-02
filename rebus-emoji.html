@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧩 Rébus Emoji - Devine l'objet !</title>
+    <link rel="stylesheet" href="css/rebus-emoji.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🧩 Rébus Emoji</h1>
+        <div class="subtitle">Devinez l'objet, le jeu ou le concept à partir des emojis !</div>
+        
+        <!-- Bouton pour mode plein écran -->
+        <div class="mode-toggle">
+            <button class="btn btn-primary" onclick="toggleFullscreenMode()">
+                🎯 Mode Jeu Seul
+            </button>
+        </div>
+        
+        <div class="main-content" id="mainContent">
+            <!-- Section Configuration -->
+            <div class="config-section" id="configSection">
+                <h2 class="section-title">⚙️ Configuration du Jeu</h2>
+                
+                <div class="import-export">
+                    <input type="file" id="importConfig" accept=".json" style="display: none;">
+                    <button class="btn btn-primary" onclick="document.getElementById('importConfig').click()">
+                        📥 Importer Config
+                    </button>
+                    <button class="btn btn-success" onclick="exportConfig()">
+                        📤 Exporter Config
+                    </button>
+                </div>
+                
+                <div class="config-form">
+                    <h3>➕ Ajouter un Rébus</h3>
+                    
+                    <div class="form-group">
+                        <label for="rebusImage">Image (optionnel) :</label>
+                        <input type="file" id="rebusImage" class="form-control" accept="image/*">
+                        <div class="image-preview" id="imagePreview"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="rebusName">Nom/Réponse :</label>
+                        <input type="text" id="rebusName" class="form-control" placeholder="Ex: Téléphone, Jeu vidéo, etc." required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="rebusEmojis">Suite d'Emojis :</label>
+                        <div class="emoji-input-wrapper">
+                            <textarea id="rebusEmojis" class="form-control emoji-input" placeholder="Cliquez pour sélectionner des emojis..." readonly></textarea>
+                            <div class="emoji-actions">
+                                <button type="button" class="btn btn-primary btn-sm" onclick="openEmojiPicker()">
+                                    😀 Ajouter
+                                </button>
+                                <button type="button" class="btn btn-secondary btn-sm" onclick="clearEmojis()">
+                                    🗑️ Vider
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Sélecteur d'emoji (modal) -->
+                        <div class="emoji-modal" id="emojiModal" style="display: none;">
+                            <div class="emoji-modal-content">
+                                <div class="emoji-modal-header">
+                                    <h4>Sélectionnez vos emojis</h4>
+                                    <button class="emoji-close" onclick="closeEmojiPicker()">&times;</button>
+                                </div>
+                                <div class="emoji-modal-body">
+                                    <emoji-picker id="emojiPicker"></emoji-picker>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-success" onclick="addRebus()">
+                        ✨ Ajouter à la Collection
+                    </button>
+                </div>
+
+                <div class="rebus-list">
+                    <h3 class="section-title">📋 Collection de Rébus (<span id="rebusCount">0</span>)</h3>
+                    <div id="rebusList"></div>
+                </div>
+            </div>
+
+            <!-- Section Jeu -->
+            <div class="game-section" id="gameSection">
+                <div class="game-header">
+                    <div class="game-stats">
+                        <div class="stat">
+                            <span class="stat-label">Score:</span>
+                            <span class="stat-value" id="score">0</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Temps:</span>
+                            <span class="stat-value" id="timer">45</span>s
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Rébus:</span>
+                            <span class="stat-value"><span id="currentRebusNum">0</span>/<span id="totalRebus">0</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="rebus-container" id="rebusContainer">
+                    <div class="rebus-display">
+                        <div class="rebus-image" id="rebusImageDisplay"></div>
+                        <div class="rebus-emojis" id="rebusEmojisDisplay">
+                            🧩 Cliquez sur "Commencer" pour jouer !
+                        </div>
+                        <div class="rebus-hint" id="rebusHint"></div>
+                    </div>
+                    
+                    <div class="answer-section" id="answerSection" style="display: none;">
+                        <input type="text" id="answerInput" class="answer-input" placeholder="Votre réponse...">
+                        <button class="btn btn-primary" onclick="checkAnswer()">
+                            ✅ Valider
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="game-controls" id="gameControls">
+                    <div class="control-buttons">
+                        <button class="btn btn-success start-btn" onclick="startGame()" id="startBtn">
+                            🎮 Commencer le Jeu
+                        </button>
+                        <button class="btn btn-warning" onclick="showHint()" id="hintBtn" style="display: none;">
+                            💡 Indice (-50 pts)
+                        </button>
+                        <button class="btn btn-secondary" onclick="skipRebus()" id="skipBtn" style="display: none;">
+                            ⏭️ Passer
+                        </button>
+                        <button class="btn btn-danger" onclick="stopGame()" id="stopBtn" style="display: none;">
+                            ⏹️ Arrêter
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bouton retour en mode plein écran -->
+        <div class="back-to-config" id="backToConfig" style="display: none;">
+            <button class="btn btn-secondary" onclick="toggleFullscreenMode()">
+                ⚙️ Retour Configuration
+            </button>
+        </div>
+
+        <!-- Overlay de résultat -->
+        <div class="result-overlay" id="resultOverlay">
+            <div class="result-content" id="resultContent">
+                <!-- Contenu généré dynamiquement -->
+            </div>
+        </div>
+
+        <!-- Overlay de fin de jeu -->
+        <div class="game-over-overlay" id="gameOverOverlay">
+            <div class="game-over-content" id="gameOverContent">
+                <!-- Contenu généré dynamiquement -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Librairie emoji picker -->
+    <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
+    <script src="js/rebus-emoji.js"></script>
+</body>
+</html>

@@ -1,0 +1,1029 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+    overflow-x: hidden;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    backdrop-filter: blur(10px);
+    transition: all 0.5s ease;
+}
+
+/* Mode plein écran */
+.container.fullscreen-mode {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    max-width: 100vw;
+    margin: 0;
+    padding: 0;
+    border-radius: 0;
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    z-index: 1000;
+    overflow-y: auto;
+}
+
+h1 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 10px;
+    font-size: 2.5rem;
+    font-weight: 300;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    animation: fadeInDown 1s ease;
+}
+
+.container.fullscreen-mode h1 {
+    color: white;
+    font-size: 2.5rem;
+    margin: 20px 0 10px 0;
+    padding: 0 20px;
+}
+
+.subtitle {
+    text-align: center;
+    color: #6c757d;
+    margin-bottom: 30px;
+    font-size: 1.1rem;
+    font-style: italic;
+}
+
+.container.fullscreen-mode .subtitle {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+    padding: 0 20px;
+}
+
+.mode-toggle {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.main-content {
+    display: grid;
+    grid-template-columns: 400px 1fr;
+    gap: 30px;
+    align-items: start;
+    transition: all 0.5s ease;
+}
+
+.main-content.fullscreen {
+    grid-template-columns: 1fr;
+    gap: 0;
+    width: 100%;
+    height: calc(100vh - 140px);
+    padding: 0 20px;
+}
+
+.config-section {
+    background: #f8f9fa;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    animation: slideInLeft 0.8s ease;
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+}
+
+.section-title {
+    font-size: 1.3rem;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.import-export {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.config-form {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid #e9ecef;
+    margin-bottom: 25px;
+}
+
+.config-form h3 {
+    color: #495057;
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: #495057;
+    font-size: 14px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px 14px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    resize: vertical;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+}
+
+/* Interface emoji simplifiée */
+.emoji-input-wrapper {
+    position: relative;
+}
+
+.emoji-input {
+    font-size: 24px;
+    text-align: center;
+    min-height: 80px;
+    line-height: 1.4;
+    cursor: pointer;
+    background: #f8f9fa;
+    border: 2px dashed #007bff;
+    transition: all 0.3s ease;
+}
+
+.emoji-input:hover {
+    background: #e3f2fd;
+    border-color: #0056b3;
+}
+
+.emoji-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    justify-content: center;
+}
+
+.btn-sm {
+    padding: 6px 12px;
+    font-size: 12px;
+}
+
+/* Modal emoji picker */
+.emoji-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1003;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.emoji-modal-content {
+    background: white;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 400px;
+    max-height: 90vh;
+    overflow: hidden;
+    box-shadow: 0 25px 80px rgba(0,0,0,0.3);
+    animation: modalSlideIn 0.3s ease;
+}
+
+.emoji-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid #e9ecef;
+    background: #f8f9fa;
+}
+
+.emoji-modal-header h4 {
+    margin: 0;
+    color: #2c3e50;
+    font-size: 1.1rem;
+}
+
+.emoji-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #6c757d;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.emoji-close:hover {
+    background: #dc3545;
+    color: white;
+}
+
+.emoji-modal-body {
+    padding: 10px;
+}
+
+/* Personnalisation du picker d'emoji */
+emoji-picker {
+    width: 100%;
+    height: 350px;
+    --background: white;
+    --border-color: transparent;
+    --outline-size: 2px;
+    --outline-color: #007bff;
+    --category-emoji-size: 1.125rem;
+    --emoji-size: 1.375rem;
+    --category-font-size: 0.9rem;
+    --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8) translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* Animations */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes popIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.3) rotate(-10deg);
+    }
+    50% {
+        transform: scale(1.05) rotate(2deg);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+    }
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-10px);
+    }
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .emoji-modal-content {
+        max-width: 95vw;
+        margin: 0 10px;
+    }
+    
+    emoji-picker {
+        height: 300px;
+    }
+}
+
+/* Responsive (suite) */
+@media (max-width: 1024px) {
+    .main-content {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .config-section {
+        max-height: none;
+    }
+    
+    .container.fullscreen-mode .main-content {
+        height: calc(100vh - 120px);
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+    
+    .container {
+        padding: 15px;
+    }
+    
+    .container.fullscreen-mode {
+        padding: 0;
+    }
+    
+    .container.fullscreen-mode .main-content {
+        height: calc(100vh - 100px);
+        padding: 0 10px;
+    }
+    
+    h1 {
+        font-size: 2rem;
+    }
+    
+    .container.fullscreen-mode h1 {
+        font-size: 2rem;
+        margin: 10px 0 5px 0;
+    }
+    
+    .rebus-emojis {
+        font-size: 36px;
+        letter-spacing: 5px;
+    }
+    
+    .container.fullscreen-mode .rebus-emojis {
+        font-size: 48px;
+        letter-spacing: 8px;
+    }
+    
+    .rebus-display {
+        padding: 20px;
+    }
+    
+    .container.fullscreen-mode .rebus-display {
+        padding: 30px;
+    }
+    
+    .game-stats {
+        flex-direction: column;
+        gap: 10px;
+        padding: 10px;
+    }
+    
+    .container.fullscreen-mode .game-stats {
+        flex-direction: row;
+        gap: 20px;
+        padding: 15px;
+    }
+    
+    .control-buttons {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .container.fullscreen-mode .control-buttons {
+        flex-direction: row;
+        gap: 15px;
+    }
+}
+
+/* Scrollbar personnalisée */
+.config-section::-webkit-scrollbar,
+.rebus-list::-webkit-scrollbar,
+.result-content::-webkit-scrollbar,
+.game-over-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.config-section::-webkit-scrollbar-track,
+.rebus-list::-webkit-scrollbar-track,
+.result-content::-webkit-scrollbar-track,
+.game-over-content::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.config-section::-webkit-scrollbar-thumb,
+.rebus-list::-webkit-scrollbar-thumb,
+.result-content::-webkit-scrollbar-thumb,
+.game-over-content::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 3px;
+}
+
+.config-section::-webkit-scrollbar-thumb:hover,
+.rebus-list::-webkit-scrollbar-thumb:hover,
+.result-content::-webkit-scrollbar-thumb:hover,
+.game-over-content::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.emoji-input-container {
+    position: relative;
+}
+
+.emoji-picker-btn {
+    margin-top: 10px;
+    width: 100%;
+}
+
+.emoji-picker-container {
+    position: relative;
+    margin: 15px 0;
+    background: white;
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    padding: 10px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    max-height: 400px;
+    overflow: hidden;
+}
+
+/* Supprimer les anciens styles inutiles */
+.emoji-helpers,
+.emoji-btn,
+.emoji-preview,
+.emoji-picker-container,
+.emoji-picker-btn {
+    display: none !important;
+}
+
+.image-preview {
+    margin-top: 10px;
+    text-align: center;
+}
+
+.image-preview img {
+    max-width: 150px;
+    max-height: 100px;
+    border-radius: 8px;
+    border: 2px solid #e9ecef;
+    object-fit: cover;
+}
+
+.btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+}
+
+.btn-warning {
+    background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
+    color: #212529;
+}
+
+.start-btn {
+    font-size: 16px;
+    padding: 15px 30px;
+}
+
+.container.fullscreen-mode .start-btn {
+    font-size: 18px;
+    padding: 15px 35px;
+}
+
+.rebus-list {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.rebus-item {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    background: #f8f9fa;
+    transition: all 0.3s ease;
+}
+
+.rebus-item:hover {
+    transform: translateX(5px);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+.rebus-item img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 6px;
+    margin-right: 12px;
+    border: 2px solid white;
+}
+
+.rebus-item-info {
+    flex: 1;
+}
+
+.rebus-item-name {
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 2px;
+}
+
+.rebus-item-emojis {
+    font-size: 18px;
+    margin-bottom: 2px;
+}
+
+.rebus-item-answer {
+    font-size: 12px;
+    color: #6c757d;
+    font-style: italic;
+}
+
+.game-section {
+    text-align: center;
+    animation: slideInRight 0.8s ease;
+}
+
+.game-section.fullscreen {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    max-height: calc(100vh - 140px);
+}
+
+.game-header {
+    margin-bottom: 20px;
+    flex-shrink: 0;
+}
+
+.container.fullscreen-mode .game-header {
+    margin-bottom: 40px;
+}
+
+.game-stats {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+}
+
+.container.fullscreen-mode .game-stats {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    gap: 40px;
+}
+
+.stat {
+    text-align: center;
+}
+
+.stat-label {
+    display: block;
+    font-size: 12px;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 5px;
+}
+
+.container.fullscreen-mode .stat-label {
+    font-size: 13px;
+    color: #2c3e50;
+}
+
+.stat-value {
+    display: block;
+    font-size: 20px;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.container.fullscreen-mode .stat-value {
+    font-size: 24px;
+}
+
+.rebus-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 400px;
+}
+
+.container.fullscreen-mode .rebus-container {
+    min-height: 50vh;
+}
+
+.rebus-display {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    margin-bottom: 30px;
+    min-width: 300px;
+    max-width: 600px;
+}
+
+.container.fullscreen-mode .rebus-display {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 60px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+}
+
+.rebus-image {
+    margin-bottom: 20px;
+}
+
+.rebus-image img {
+    max-width: 150px;
+    max-height: 150px;
+    border-radius: 12px;
+    border: 4px solid #007bff;
+    object-fit: cover;
+}
+
+.container.fullscreen-mode .rebus-image img {
+    max-width: 200px;
+    max-height: 200px;
+}
+
+.rebus-emojis {
+    font-size: 48px;
+    line-height: 1.2;
+    margin: 30px 0;
+    letter-spacing: 10px;
+    text-align: center;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    animation: bounce 2s infinite;
+}
+
+.container.fullscreen-mode .rebus-emojis {
+    font-size: 64px;
+    margin: 40px 0;
+    letter-spacing: 15px;
+}
+
+.rebus-hint {
+    font-size: 16px;
+    color: #007bff;
+    font-style: italic;
+    margin-top: 15px;
+    min-height: 20px;
+}
+
+.container.fullscreen-mode .rebus-hint {
+    font-size: 18px;
+}
+
+.answer-section {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.answer-input {
+    padding: 12px 20px;
+    border: 2px solid #007bff;
+    border-radius: 8px;
+    font-size: 16px;
+    min-width: 200px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.container.fullscreen-mode .answer-input {
+    font-size: 18px;
+    padding: 15px 25px;
+    min-width: 250px;
+}
+
+.answer-input:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0,123,255,0.3);
+    transform: scale(1.05);
+}
+
+.game-controls {
+    margin-top: 30px;
+    flex-shrink: 0;
+}
+
+.container.fullscreen-mode .game-controls {
+    margin-top: 40px;
+}
+
+.control-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.container.fullscreen-mode .control-buttons {
+    gap: 20px;
+}
+
+.back-to-config {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 1001;
+}
+
+.result-overlay, .game-over-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1002;
+    padding: 20px;
+}
+
+.result-overlay.show, .game-over-overlay.show {
+    display: flex;
+    animation: fadeIn 0.3s ease;
+}
+
+.result-content, .game-over-content {
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 25px 80px rgba(0,0,0,0.5);
+    max-width: 90vw;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: popIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.result-content h2, .game-over-content h2 {
+    margin-bottom: 20px;
+    color: #2c3e50;
+}
+
+.result-emojis {
+    font-size: 36px;
+    margin: 15px 0;
+    letter-spacing: 5px;
+}
+
+.result-answer {
+    font-size: 24px;
+    font-weight: bold;
+    color: #28a745;
+    margin: 15px 0;
+}
+
+.result-image {
+    max-width: 200px;
+    max-height: 200px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin: 15px 0;
+}
+
+.final-score {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #007bff;
+    margin: 20px 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .emoji-modal-content {
+        max-width: 95vw;
+        margin: 0 10px;
+    }
+    
+    emoji-picker {
+        height: 300px;
+    }
+}
+
+/* Responsive (suite) */
+@media (max-width: 1024px) {
+    .main-content {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .config-section {
+        max-height: none;
+    }
+    
+    .container.fullscreen-mode .main-content {
+        height: calc(100vh - 120px);
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+    
+    .container {
+        padding: 15px;
+    }
+    
+    .container.fullscreen-mode {
+        padding: 0;
+    }
+    
+    .container.fullscreen-mode .main-content {
+        height: calc(100vh - 100px);
+        padding: 0 10px;
+    }
+    
+    h1 {
+        font-size: 2rem;
+    }
+    
+    .container.fullscreen-mode h1 {
+        font-size: 2rem;
+        margin: 10px 0 5px 0;
+    }
+    
+    .rebus-emojis {
+        font-size: 36px;
+        letter-spacing: 5px;
+    }
+    
+    .container.fullscreen-mode .rebus-emojis {
+        font-size: 48px;
+        letter-spacing: 8px;
+    }
+    
+    .rebus-display {
+        padding: 20px;
+    }
+    
+    .container.fullscreen-mode .rebus-display {
+        padding: 30px;
+    }
+    
+    .game-stats {
+        flex-direction: column;
+        gap: 10px;
+        padding: 10px;
+    }
+    
+    .container.fullscreen-mode .game-stats {
+        flex-direction: row;
+        gap: 20px;
+        padding: 15px;
+    }
+    
+    .control-buttons {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .container.fullscreen-mode .control-buttons {
+        flex-direction: row;
+        gap: 15px;
+    }
+}
+
+/* Scrollbar personnalisée */
+.config-section::-webkit-scrollbar,
+.rebus-list::-webkit-scrollbar,
+.result-content::-webkit-scrollbar,
+.game-over-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.config-section::-webkit-scrollbar-track,
+.rebus-list::-webkit-scrollbar-track,
+.result-content::-webkit-scrollbar-track,
+.game-over-content::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.config-section::-webkit-scrollbar-thumb,
+.rebus-list::-webkit-scrollbar-thumb,
+.result-content::-webkit-scrollbar-thumb,
+.game-over-content::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 3px;
+}
+
+.config-section::-webkit-scrollbar-thumb:hover,
+.rebus-list::-webkit-scrollbar-thumb:hover,
+.result-content::-webkit-scrollbar-thumb:hover,
+.game-over-content::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Supprimer les styles en double à la fin du fichier */
+.emoji-input-container,
+.emoji-picker-btn,
+.emoji-picker-container,
+.emoji-helpers,
+.emoji-btn,
+.emoji-preview,
+.emoji-picker-btn {
+    /* Ces styles sont déjà définis plus haut ou ne sont plus nécessaires */
+}
