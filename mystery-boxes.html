@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📦 Boîtes Mystère - Découvrez vos surprises !</title>
+    <link rel="stylesheet" href="css/mystery-boxes.css">
+</head>
+<body>
+    <div class="container">
+        <h1>📦 Boîtes Mystère</h1>
+        <div class="subtitle">Configurez vos éléments et découvrez-les dans des boîtes numérotées !</div>
+        
+        <!-- Bouton pour mode plein écran -->
+        <div class="mode-toggle">
+            <button class="btn btn-primary" onclick="toggleFullscreenMode()">
+                🎯 Mode Jeu Seul
+            </button>
+        </div>
+        
+        <div class="main-content" id="mainContent">
+            <!-- Section Configuration -->
+            <div class="config-section" id="configSection">
+                <h2 class="section-title">⚙️ Configuration des Éléments</h2>
+                
+                <div class="import-export">
+                    <input type="file" id="importConfig" accept=".json" style="display: none;">
+                    <button class="btn btn-primary" onclick="document.getElementById('importConfig').click()">
+                        📥 Importer Config
+                    </button>
+                    <button class="btn btn-success" onclick="exportConfig()">
+                        📤 Exporter Config
+                    </button>
+                </div>
+                
+                <div class="config-form">
+                    <h3>➕ Ajouter un Élément</h3>
+                    
+                    <div class="form-group">
+                        <label for="itemImage">Image :</label>
+                        <input type="file" id="itemImage" class="form-control" accept="image/*" required>
+                        <div class="image-preview" id="imagePreview"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="itemName">Nom :</label>
+                        <input type="text" id="itemName" class="form-control" placeholder="Ex: Cadeau, Surprise, Prix..." required>
+                    </div>
+                    
+                    <button class="btn btn-success" onclick="addItem()">
+                        ✨ Ajouter à la Collection
+                    </button>
+                </div>
+
+                <div class="items-list">
+                    <h3 class="section-title">📋 Collection d'Éléments (<span id="itemCount">0</span>)</h3>
+                    <div id="itemsList"></div>
+                </div>
+            </div>
+
+            <!-- Section Jeu -->
+            <div class="game-section" id="gameSection">
+                <div class="game-header">
+                    <div class="game-stats">
+                        <div class="stat">
+                            <span class="stat-label">Boîtes Ouvertes:</span>
+                            <span class="stat-value" id="openedBoxes">0</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Total:</span>
+                            <span class="stat-value" id="totalBoxes">0</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Restantes:</span>
+                            <span class="stat-value" id="remainingBoxes">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="boxes-container" id="boxesContainer">
+                    <div class="boxes-grid" id="boxesGrid">
+                        <!-- Les boîtes seront générées ici -->
+                    </div>
+                </div>
+                
+                <div class="game-controls" id="gameControls">
+                    <div class="control-buttons">
+                        <button class="btn btn-success start-btn" onclick="startGame()" id="startBtn">
+                            🎮 Générer les Boîtes
+                        </button>
+                        <button class="btn btn-warning" onclick="resetBoxes()" id="resetBtn" style="display: none;">
+                            🔄 Nouvelle Distribution
+                        </button>
+                        <button class="btn btn-secondary" onclick="openAllBoxes()" id="revealBtn" style="display: none;">
+                            👁️ Révéler Tout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bouton retour en mode plein écran -->
+        <div class="back-to-config" id="backToConfig" style="display: none;">
+            <button class="btn btn-secondary" onclick="toggleFullscreenMode()">
+                ⚙️ Retour Configuration
+            </button>
+        </div>
+
+        <!-- Overlay de révélation -->
+        <div class="reveal-overlay" id="revealOverlay">
+            <div class="reveal-content" id="revealContent">
+                <!-- Contenu généré dynamiquement -->
+            </div>
+        </div>
+
+        <!-- Overlay de fin -->
+        <div class="complete-overlay" id="completeOverlay">
+            <div class="complete-content" id="completeContent">
+                <!-- Contenu généré dynamiquement -->
+            </div>
+        </div>
+    </div>
+
+    <script src="js/mystery-boxes.js"></script>
+</body>
+</html>
